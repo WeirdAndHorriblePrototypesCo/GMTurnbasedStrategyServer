@@ -19,6 +19,9 @@ switch(_TypeEvent) {
 			//If there is a client trying to connect, get the socket of the connection.
 			var _Target = ds_map_find_value(async_load, "socket");
 			ds_list_add(Sockets,_Target);
+			
+			//Send all info to the player that it needs to have to initialize.
+			script_execute(scr_initialize_new_player);
 			}
 		else { show_message("Too many players!") }
 		break;
