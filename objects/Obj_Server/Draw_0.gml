@@ -4,6 +4,8 @@ if Startup = 1 { draw_text(10,25,"Bind to port succesful") }
 if Startup = 2 { draw_text_color(10,25,"Bind to port FAILED!!!",c_red,c_red,c_red,c_red,1) }
 draw_text(10,40,string("Connected Players = ") + string(ds_list_size(Sockets)))
 draw_text(10,55,string("Max players = ") + string(MaxClients))
+draw_text(10,70,string("Time until next turn = ") + string(floor(TurnDuration*TurnAmount-Time+1)))
+draw_text(10,85,string("Amount of Turns passed = ") + string(TurnAmount))
 
 
 //The connected player data.

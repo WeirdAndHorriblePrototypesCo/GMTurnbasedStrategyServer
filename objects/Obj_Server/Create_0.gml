@@ -20,3 +20,9 @@ if Server < 0
     }
 //The thing that makes the connection between the server & the client.
 Sockets = ds_list_create()
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+//Turn info. / Settings.
+Time = 0
+TurnDuration = 120
+TurnAmount = 0
