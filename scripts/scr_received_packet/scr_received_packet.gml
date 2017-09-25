@@ -40,6 +40,9 @@ switch(_MessageId) {
 			_Rounds+=1
 			}
 		break;
-		
 	
+	case "Login":
+		show_debug_message(buffer_read(_Buffer,buffer_string))
+		show_debug_message(buffer_read(_Buffer,buffer_string))
+		break;
 	}
