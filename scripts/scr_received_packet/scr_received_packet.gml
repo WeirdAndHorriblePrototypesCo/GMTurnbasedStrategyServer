@@ -12,6 +12,10 @@ var _Buffer = argument[0];
 //From here on the info in the buffer will be 100,120.
 var _MessageId = buffer_read(_Buffer,buffer_string);
 
+var _Size = 1024;
+var _Type = buffer_fixed;
+var _Alignment = 1;
+BufferOut = buffer_create(_Size,_Type,_Alignment)
 
 switch(_MessageId) {
 
@@ -22,11 +26,6 @@ switch(_MessageId) {
 		break;
 		
 	case "House":		//This case sends the data received to all players.
-		var _Size = 1024;
-		var _Type = buffer_fixed;
-		var _Alignment = 1;
-		BufferOut = buffer_create(_Size,_Type,_Alignment)
-		
 		buffer_seek(BufferOut, buffer_seek_start, 0);
 		buffer_write(BufferOut, buffer_string, "House");			
 		buffer_write(BufferOut, buffer_u32, buffer_read(_Buffer, buffer_u32));	
@@ -42,7 +41,25 @@ switch(_MessageId) {
 		break;
 	
 	case "Login":
-		show_debug_message(buffer_read(_Buffer,buffer_string))
-		show_debug_message(buffer_read(_Buffer,buffer_string))
+		var _Username = buffer_read(_Buffer,buffer_string)
+		var _Password = buffer_read(_Buffer,buffer_string)
+		var _Socket = buffer_read(_Buffer,buffer_u32)
+		ini_open(working_directory + "UserDetails.ini")
+		if !ini_key_exists(_Username,_Password) {
+			buffer_seek(BufferOut, buffer_seek_start, 0);
+			buffer_write(BufferOut, buffer_string, "Error");			
+			buffer_write(BufferOut, buffer_string, "Wrong username or password!");	
+			}
+		else {
+			buffer_seek(BufferOut, buffer_seek_start, 0);
+			buffer_write(BufferOut, buffer_string, "Login Success");
+			}
+		//Network send in a repeat statement to every connected player.
+		network_send_packet(_Socket, BufferOut, buffer_tell(BufferOut));
+		ini_close()
+		break;
+	case "New Player":
+		//Send all info to the player that it needs to have to initialize.
+		script_execute(scr_initialize_new_player)
 		break;
 	}

@@ -1,3 +1,4 @@
+//Send all the data to the new players!
 var _Size = 1024;
 var _Type = buffer_fixed;
 var _Alignment = 1;

@@ -19,9 +19,16 @@ switch(_TypeEvent) {
 			//If there is a client trying to connect, get the socket of the connection.
 			var _Target = ds_map_find_value(async_load, "socket");
 			ds_list_add(Sockets,_Target);
-			
-			//Send all info to the player that it needs to have to initialize.
-			script_execute(scr_initialize_new_player);
+			var _Size = 1024;
+			var _Type = buffer_fixed;
+			var _Alignment = 1;
+			BufferOut = buffer_create(_Size,_Type,_Alignment)
+
+			buffer_seek(BufferOut, buffer_seek_start, 0);
+			buffer_write(BufferOut, buffer_string, "Player Number");
+			buffer_write(BufferOut, buffer_u32, _Target);
+
+			network_send_packet(_Target, BufferOut, buffer_tell(BufferOut));
 			}
 		else { show_message("Too many players!") }
 		break;
