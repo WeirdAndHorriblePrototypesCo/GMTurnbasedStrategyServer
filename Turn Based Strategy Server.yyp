@@ -135,14 +135,6 @@
             }
         },
         {
-            "Key": "a9ca02e9-ce4f-48b8-9036-709a45b04150",
-            "Value": {
-                "id": "54cd6268-2f0f-46f5-a795-88e8c7d78341",
-                "resourcePath": "datafiles_yy\\UserDetails.ini.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "b90bb705-f31a-4815-addc-2838a92f3db5",
             "Value": {
                 "id": "e59428e1-7227-410b-aec8-fcc813f64121",

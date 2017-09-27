@@ -44,7 +44,8 @@ switch(_MessageId) {
 		var _Username = buffer_read(_Buffer,buffer_string)
 		var _Password = buffer_read(_Buffer,buffer_string)
 		var _Socket = buffer_read(_Buffer,buffer_u32)
-		ini_open(working_directory + "UserDetails.ini")
+		//Load from txt file.
+		ini_open("UserDetails.txt")
 		if !ini_key_exists(_Username,_Password) {
 			buffer_seek(BufferOut, buffer_seek_start, 0);
 			buffer_write(BufferOut, buffer_string, "Error");			
@@ -60,6 +61,17 @@ switch(_MessageId) {
 		break;
 	case "New Player":
 		//Send all info to the player that it needs to have to initialize.
-		script_execute(scr_initialize_new_player)
+		script_execute(scr_initialize_new_player);
+		break;
+	case "Create Account":
+		var _Username = buffer_read(_Buffer,buffer_string)
+		var _Password = buffer_read(_Buffer,buffer_string)
+		var _Socket = buffer_read(_Buffer,buffer_u32)
+		//Save to txt file 
+		//PLEASE READ ME: The file can be found in /LOCAL in your app-data. 
+		//Its under Turn_Based_Strategy_Server in a seperate folder for some reason!!!!!
+		ini_open(working_directory + "UserDetails.txt")
+		ini_write_string(_Username,_Password,"")
+		ini_close()
 		break;
 	}
