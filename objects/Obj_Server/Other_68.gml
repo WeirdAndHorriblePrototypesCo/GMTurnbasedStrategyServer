@@ -47,7 +47,7 @@ switch(_TypeEvent) {
 		
 	case network_type_data:
 		//When the client sends us data.
-		
+		var _Target = ds_map_find_value(async_load, "socket");
 		//handle the data.
 		//Buffers are like variables. They are variables that can be send though the "tunnel" (socket).
 		//The value will be put into the buffer.

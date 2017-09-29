@@ -20,6 +20,7 @@ if Server < 0
     }
 //The thing that makes the connection between the server & the client.
 Sockets = ds_list_create()
+TakenUsernames = ds_list_create()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //Turn info. / Settings.

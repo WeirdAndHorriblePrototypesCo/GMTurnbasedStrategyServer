@@ -43,20 +43,36 @@ switch(_MessageId) {
 	case "Login":
 		var _Username = buffer_read(_Buffer,buffer_string)
 		var _Password = buffer_read(_Buffer,buffer_string)
-		var _Socket = buffer_read(_Buffer,buffer_u32)
+		var _Rounds = 0
+		
 		//Load from txt file.
 		ini_open("UserDetails.txt")
+		repeat ds_list_size(TakenUsernames) {
+			if ds_list_find_index(TakenUsernames,_Rounds) == _Username {
+				buffer_seek(BufferOut, buffer_seek_start, 0);
+				buffer_write(BufferOut, buffer_string, "User already login")                                   
+				}
+			_Rounds+=1
+			}
 		if !ini_key_exists(_Username,_Password) {
 			buffer_seek(BufferOut, buffer_seek_start, 0);
-			buffer_write(BufferOut, buffer_string, "Error");			
-			buffer_write(BufferOut, buffer_string, "Wrong username or password!");	
+			buffer_write(BufferOut, buffer_string, "Error");		
+			buffer_write(BufferOut, buffer_string, "Wrong username or password!");
 			}
 		else {
 			buffer_seek(BufferOut, buffer_seek_start, 0);
 			buffer_write(BufferOut, buffer_string, "Login Success");
+			ds_list_add(TakenUsernames,_Username)
 			}
+		
 		//Network send in a repeat statement to every connected player.
-		network_send_packet(_Socket, BufferOut, buffer_tell(BufferOut));
+		//For socket; see receiving data.
+		var _Rounds=0
+		repeat ds_list_size(Sockets) {
+			//Network send in a repeat statement to every connected player.
+			network_send_packet(ds_list_find_value(Sockets,_Rounds), BufferOut, buffer_tell(BufferOut));
+			_Rounds+=1
+			}
 		ini_close()
 		break;
 	case "New Player":
@@ -66,7 +82,6 @@ switch(_MessageId) {
 	case "Create Account":
 		var _Username = buffer_read(_Buffer,buffer_string)
 		var _Password = buffer_read(_Buffer,buffer_string)
-		var _Socket = buffer_read(_Buffer,buffer_u32)
 		//Save to txt file 
 		//PLEASE READ ME: The file can be found in /LOCAL in your app-data. 
 		//Its under Turn_Based_Strategy_Server in a seperate folder for some reason!!!!!
