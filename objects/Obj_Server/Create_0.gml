@@ -29,7 +29,6 @@ TurnDuration = 2
 TurnAmount = 0
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-WindDirection = 0
-WindSpeed=0
-
-
+CloudDirection=irandom(360)
+CloudSpeed = irandom(3)+irandom(2)
+CloudStrength = random(1)

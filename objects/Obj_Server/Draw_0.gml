@@ -6,8 +6,9 @@ draw_text(10,40,string("Connected Players = ") + string(ds_list_size(Sockets)))
 draw_text(10,55,string("Max players = ") + string(MaxClients))
 draw_text(10,70,string("Time until next turn = ") + string(floor(TurnDuration*TurnAmount-Time+1)))
 draw_text(10,85,string("Amount of Turns passed = ") + string(TurnAmount))
-draw_text(10,100,string("Wind Strength = ") + string(WindSpeed))
-draw_text(10,115,string("Wind Direction = ") + string(WindDirection))
+draw_text(10,100,string("Cloud Speed = ") + string(CloudSpeed))
+draw_text(10,115,string("Cloud Direction = ") + string(CloudDirection))
+draw_text(10,130,string("Cloud Strength = ") + string(CloudStrength))
 
 
 //The connected player data.

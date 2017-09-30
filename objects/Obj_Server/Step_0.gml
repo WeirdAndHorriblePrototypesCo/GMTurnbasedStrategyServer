@@ -26,16 +26,23 @@ if Time-TurnDuration*TurnAmount == 1 {
 		
 	
 	//This section is for the wind direction \/\/\/\/
-	if irandom(1)+TurnAmount/10 == floor(irandom(1)+TurnAmount/10) {
-		WindDirection=irandom(360)
-		WindSpeed = random(4.5)+0.5
+	if irandom(5) == 5 {
+
+		CloudDirection=irandom(360)
+		CloudSpeed = 1
+		if irandom(8)  == 8  {CloudSpeed=0}
+		if irandom(5)  == 5  {CloudSpeed=2}
+		if irandom(15) == 15 {CloudSpeed=5}
+		CloudStrength = irandom(3)+irandom(2)+irandom(1)+irandom(1)+irandom(1)+irandom(2)
+		
 		BufferOut = buffer_create(_Size,_Type,_Alignment)
 	
 		buffer_seek(BufferOut, buffer_seek_start, 0);
 		buffer_write(BufferOut, buffer_string, "Wind Direction");
-		buffer_write(BufferOut, buffer_u32, WindDirection);
-		buffer_write(BufferOut, buffer_u32, WindSpeed);
-				
+		buffer_write(BufferOut, buffer_u16, CloudDirection);
+		buffer_write(BufferOut, buffer_u8, CloudSpeed);
+		buffer_write(BufferOut, buffer_u8, CloudStrength);
+		
 		var _Rounds = 0
 	
 		repeat ds_list_size(Sockets) {
