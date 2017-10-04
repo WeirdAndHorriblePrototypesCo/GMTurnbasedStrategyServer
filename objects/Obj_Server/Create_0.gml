@@ -32,3 +32,6 @@ TurnAmount = 0
 CloudDirection=irandom(360)
 CloudSpeed = irandom(3)+irandom(2)
 CloudStrength = random(1)
+
+//Open Ini file for use.
+ini_open(working_directory + "UserDetails.txt")

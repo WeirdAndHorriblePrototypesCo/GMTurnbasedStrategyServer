@@ -24,37 +24,38 @@ switch(_MessageId) {
 		var _My = buffer_read(_Buffer, buffer_u32); //Nothing left in the buffer.
 		instance_create_depth(_Mx, _My, 0, Obj_Click)
 		break;
-		
-	case "House":		//This case sends the data received to all players.
+    case "House":
+        buffer_write(BufferOut, buffer_string, "House");
+        buffer_write(BufferOut, buffer_u32, buffer_read(_Buffer, buffer_u32));	
+		buffer_write(BufferOut, buffer_u32, buffer_read(_Buffer, buffer_u32));
+        scr_send_everyone()
+        break;
+	case "Small Building":		//This case sends the data received to all players.
+        var _Type = buffer_read(_Buffer,buffer_string)
 		buffer_seek(BufferOut, buffer_seek_start, 0);
-		buffer_write(BufferOut, buffer_string, "House");			
+        buffer_write(BufferOut,buffer_string,"Small Building")
 		buffer_write(BufferOut, buffer_u32, buffer_read(_Buffer, buffer_u32));	
 		buffer_write(BufferOut, buffer_u32, buffer_read(_Buffer, buffer_u32));
-		
-		var _Rounds = 0
-		
-		repeat ds_list_size(Sockets) {
-			//Network send in a repeat statement to every connected player.
-			network_send_packet(ds_list_find_value(Sockets,_Rounds), BufferOut, buffer_tell(BufferOut));
-			_Rounds+=1
-			}
+        if _Type == "Farm" { buffer_write(BufferOut, buffer_string, "Farm") }
+        if _Type == "Mine" { buffer_write(BufferOut, buffer_string, "Mine") }
+		scr_send_everyone()
 		break;
-	
 	case "Login":
 		var _Username = buffer_read(_Buffer,buffer_string)
 		var _Password = buffer_read(_Buffer,buffer_string)
 		var _Rounds = 0
 		
 		//Load from txt file.
-		ini_open("UserDetails.txt")
 		repeat ds_list_size(TakenUsernames) {
-			if ds_list_find_index(TakenUsernames,_Rounds) == _Username {
+			if ds_list_find_value(TakenUsernames,_Rounds) == _Username {
 				buffer_seek(BufferOut, buffer_seek_start, 0);
-				buffer_write(BufferOut, buffer_string, "User already login")                                   
+				buffer_write(BufferOut, buffer_string, "User already login")
+				scr_send_everyone()
+				exit
 				}
 			_Rounds+=1
 			}
-		if !ini_key_exists(_Username,_Password) {
+		if ini_read_string(_Username,"Password","Error") != _Password {
 			buffer_seek(BufferOut, buffer_seek_start, 0);
 			buffer_write(BufferOut, buffer_string, "Error");		
 			buffer_write(BufferOut, buffer_string, "Wrong username or password!");
@@ -67,26 +68,51 @@ switch(_MessageId) {
 		
 		//Network send in a repeat statement to every connected player.
 		//For socket; see receiving data.
-		var _Rounds=0
-		repeat ds_list_size(Sockets) {
-			//Network send in a repeat statement to every connected player.
-			network_send_packet(ds_list_find_value(Sockets,_Rounds), BufferOut, buffer_tell(BufferOut));
-			_Rounds+=1
-			}
-		ini_close()
+		scr_send_everyone()
+		break;
+	case "Logout":
+		var _Username = buffer_read(_Buffer,buffer_string)
+		ini_write_real(_Username,"Planks",buffer_read(_Buffer,buffer_u16))
+		ini_write_real(_Username,"Food",buffer_read(_Buffer,buffer_u16))
+		ini_write_real(_Username,"Stone",buffer_read(_Buffer,buffer_u16))
+		ini_write_real(_Username,"Workers",buffer_read(_Buffer,buffer_u16))
+		ds_list_delete(TakenUsernames,ds_list_find_index(TakenUsernames,_Username))
 		break;
 	case "New Player":
 		//Send all info to the player that it needs to have to initialize.
-		script_execute(scr_initialize_new_player);
+		script_execute(scr_initialize_new_player,_Buffer);
 		break;
 	case "Create Account":
 		var _Username = buffer_read(_Buffer,buffer_string)
 		var _Password = buffer_read(_Buffer,buffer_string)
+        var _SendbackBuffer = buffer_read(_Buffer,buffer_u16)
 		//Save to txt file 
 		//PLEASE READ ME: The file can be found in /LOCAL in your app-data. 
 		//Its under Turn_Based_Strategy_Server in a seperate folder for some reason!!!!!
-		ini_open(working_directory + "UserDetails.txt")
-		ini_write_string(_Username,_Password,"")
-		ini_close()
+        if ini_section_exists(_Username) {
+            buffer_seek(BufferOut,buffer_seek_start,0)
+            buffer_write(BufferOut,buffer_string,"Username Taken")
+            network_send_packet(_SendbackBuffer,BufferOut,buffer_tell(BufferOut));
+            exit
+            }
+		ini_write_string(_Username,"Password",_Password)
+		ini_write_real(_Username,"Planks",15)
+		ini_write_real(_Username,"Food",30)
+		ini_write_real(_Username,"Workers",5)
+		ini_write_real(_Username,"Stone",15)
 		break;
+	case "Turn Resources":
+		var _Username = buffer_read(_Buffer, buffer_string)
+		ini_write_real(_Username,"Planks", ini_read_real(_Username,"Planks",0)+buffer_read(_Buffer, buffer_u16))
+		ini_write_real(_Username,"Food", ini_read_real(_Username,"Food",0)+buffer_read(_Buffer, buffer_u16))
+        ini_write_real(_Username,"Stone", ini_read_real(_Username,"Stone",0)+buffer_read(_Buffer, buffer_u16))
+        buffer_seek(BufferOut,buffer_seek_start,0)
+        buffer_write(BufferOut,buffer_string,"Resources Gained")
+        buffer_write(BufferOut,buffer_string,_Username)
+        buffer_write(BufferOut,buffer_u16,ini_read_real(_Username,"Planks",0))
+        buffer_write(BufferOut,buffer_u16,ini_read_real(_Username,"Food",0))
+        buffer_write(BufferOut,buffer_u16,ini_read_real(_Username,"Stone",0))
+        scr_send_everyone()
+		break;
+		//Send recourses back.
 	}

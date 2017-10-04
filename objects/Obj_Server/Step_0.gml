@@ -1,7 +1,10 @@
-/// @description TURN clock
+ /// @description TURN clock
 
 
 Time = floor(get_timer()/1000000);
+if TurnDuration*TurnAmount-Time+1 < 0 {
+	TurnAmount+=1
+	}
 if Time-TurnDuration*TurnAmount == 1 {
 	TurnAmount+=1
 	
@@ -26,7 +29,7 @@ if Time-TurnDuration*TurnAmount == 1 {
 		
 	
 	//This section is for the wind direction \/\/\/\/
-	if irandom(5) == 5 {
+	if irandom(15) == 15 {
 
 		CloudDirection=irandom(360)
 		CloudSpeed = 1

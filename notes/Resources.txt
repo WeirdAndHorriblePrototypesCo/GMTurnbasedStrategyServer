@@ -1,0 +1,8 @@
+All available resources are:
+Planks
+Food
+Stone
+Workers
+
+If you do not specify a specific resource when calling the check_costs script, the script will take a
+"0" as the given value. (So this resource will not be required to build the thing)
