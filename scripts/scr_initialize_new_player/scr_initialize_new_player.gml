@@ -17,10 +17,10 @@ network_send_packet(ds_list_size(Sockets), CloudBuffer, buffer_tell(CloudBuffer)
 ResourceBuffer = buffer_create(_Size,_Type,_Alignment)
 buffer_seek(ResourceBuffer, buffer_seek_start, 0)
 buffer_write(ResourceBuffer, buffer_string, "Login Resources")
-buffer_write(ResourceBuffer, buffer_u16, ini_read_real(_Username,"Planks",0))
-buffer_write(ResourceBuffer, buffer_u16, ini_read_real(_Username,"Food",0))
-buffer_write(ResourceBuffer, buffer_u16, ini_read_real(_Username,"Stone",0))
-buffer_write(ResourceBuffer, buffer_u16, ini_read_real(_Username,"Workers",0))
+buffer_write(ResourceBuffer, buffer_u32, ini_read_real(_Username,"Planks",0))
+buffer_write(ResourceBuffer, buffer_u32, ini_read_real(_Username,"Food",0))
+buffer_write(ResourceBuffer, buffer_u32, ini_read_real(_Username,"Stone",0))
+buffer_write(ResourceBuffer, buffer_u32, ini_read_real(_Username,"Workers",0))
 network_send_packet(ds_list_size(Sockets), ResourceBuffer, buffer_tell(ResourceBuffer));
 //Send the MAP to the player.
 exit

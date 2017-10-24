@@ -135,6 +135,14 @@
             }
         },
         {
+            "Key": "a1217f9a-ae23-4e87-a580-f265628511ce",
+            "Value": {
+                "id": "cf86f2fe-eb89-45d4-92a5-e120e9fc65f4",
+                "resourcePath": "notes\\IniFiles.yy",
+                "resourceType": "GMNotes"
+            }
+        },
+        {
             "Key": "a9188620-a624-4a5a-83ae-a1b53faf038b",
             "Value": {
                 "id": "c8fe9c79-bbb8-4dca-a4cb-312bcdd7406c",
@@ -148,6 +156,14 @@
                 "id": "e59428e1-7227-410b-aec8-fcc813f64121",
                 "resourcePath": "views\\b90bb705-f31a-4815-addc-2838a92f3db5.yy",
                 "resourceType": "GMFolder"
+            }
+        },
+        {
+            "Key": "bdeff78e-8bad-41f2-8588-535421988b4e",
+            "Value": {
+                "id": "7cef76bc-2f6b-4ac6-91c5-1482357bbc53",
+                "resourcePath": "tilesets\\tileset0\\tileset0.yy",
+                "resourceType": "GMTileSet"
             }
         },
         {
@@ -196,6 +212,14 @@
                 "id": "17918dc7-225a-47fe-b4a6-6e5349008459",
                 "resourcePath": "views\\e91ab77c-d885-4d37-8d9a-38bc0c89cbf8.yy",
                 "resourceType": "GMFolder"
+            }
+        },
+        {
+            "Key": "eef000fd-c4ca-4eb0-8054-50b8f8dcc004",
+            "Value": {
+                "id": "61b1dbc0-7cb4-41e7-beee-36b19b9059a4",
+                "resourcePath": "sprites\\BackGroundPlanner\\BackGroundPlanner.yy",
+                "resourceType": "GMSprite"
             }
         },
         {

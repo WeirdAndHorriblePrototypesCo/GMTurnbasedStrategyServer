@@ -18,7 +18,6 @@ var _Alignment = 1;
 BufferOut = buffer_create(_Size,_Type,_Alignment)
 
 switch(_MessageId) {
-
 	case "Click":		//This case puts a dot on the screen.
 		var _Mx = buffer_read(_Buffer, buffer_u32); //120
 		var _My = buffer_read(_Buffer, buffer_u32); //Nothing left in the buffer.
@@ -28,6 +27,7 @@ switch(_MessageId) {
         buffer_write(BufferOut, buffer_string, "House");
         buffer_write(BufferOut, buffer_u32, buffer_read(_Buffer, buffer_u32));	
 		buffer_write(BufferOut, buffer_u32, buffer_read(_Buffer, buffer_u32));
+        buffer_write(BufferOut, buffer_string, buffer_read(_Buffer, buffer_string));
         scr_send_everyone()
         break;
 	case "Small Building":		//This case sends the data received to all players.
@@ -36,6 +36,7 @@ switch(_MessageId) {
         buffer_write(BufferOut,buffer_string,"Small Building")
 		buffer_write(BufferOut, buffer_u32, buffer_read(_Buffer, buffer_u32));	
 		buffer_write(BufferOut, buffer_u32, buffer_read(_Buffer, buffer_u32));
+        buffer_write(BufferOut, buffer_string, buffer_read(_Buffer, buffer_string));
         if _Type == "Farm" { buffer_write(BufferOut, buffer_string, "Farm") }
         if _Type == "Mine" { buffer_write(BufferOut, buffer_string, "Mine") }
 		scr_send_everyone()
@@ -63,6 +64,8 @@ switch(_MessageId) {
 		else {
 			buffer_seek(BufferOut, buffer_seek_start, 0);
 			buffer_write(BufferOut, buffer_string, "Login Success");
+            buffer_write(BufferOut, buffer_string, _Username)
+            buffer_write(BufferOut, buffer_string, _Password)
 			ds_list_add(TakenUsernames,_Username)
 			}
 		
@@ -72,10 +75,10 @@ switch(_MessageId) {
 		break;
 	case "Logout":
 		var _Username = buffer_read(_Buffer,buffer_string)
-		ini_write_real(_Username,"Planks",buffer_read(_Buffer,buffer_u16))
-		ini_write_real(_Username,"Food",buffer_read(_Buffer,buffer_u16))
-		ini_write_real(_Username,"Stone",buffer_read(_Buffer,buffer_u16))
-		ini_write_real(_Username,"Workers",buffer_read(_Buffer,buffer_u16))
+		ini_write_real(_Username,"Planks",buffer_read(_Buffer,buffer_u32))
+		ini_write_real(_Username,"Food",buffer_read(_Buffer,buffer_u32))
+		ini_write_real(_Username,"Stone",buffer_read(_Buffer,buffer_u32))
+		ini_write_real(_Username,"Workers",buffer_read(_Buffer,buffer_u32))
 		ds_list_delete(TakenUsernames,ds_list_find_index(TakenUsernames,_Username))
 		break;
 	case "New Player":
@@ -85,14 +88,16 @@ switch(_MessageId) {
 	case "Create Account":
 		var _Username = buffer_read(_Buffer,buffer_string)
 		var _Password = buffer_read(_Buffer,buffer_string)
-        var _SendbackBuffer = buffer_read(_Buffer,buffer_u16)
 		//Save to txt file 
 		//PLEASE READ ME: The file can be found in /LOCAL in your app-data. 
 		//Its under Turn_Based_Strategy_Server in a seperate folder for some reason!!!!!
+        //When you create a new account, you cannot see it in UserDetails yet! It will only 
+        //show once you have closed down the server.
         if ini_section_exists(_Username) {
             buffer_seek(BufferOut,buffer_seek_start,0)
             buffer_write(BufferOut,buffer_string,"Username Taken")
-            network_send_packet(_SendbackBuffer,BufferOut,buffer_tell(BufferOut));
+            buffer_write(BufferOut,buffer_string,_Username)
+            scr_send_everyone()
             exit
             }
 		ini_write_string(_Username,"Password",_Password)
@@ -103,16 +108,23 @@ switch(_MessageId) {
 		break;
 	case "Turn Resources":
 		var _Username = buffer_read(_Buffer, buffer_string)
-		ini_write_real(_Username,"Planks", ini_read_real(_Username,"Planks",0)+buffer_read(_Buffer, buffer_u16))
-		ini_write_real(_Username,"Food", ini_read_real(_Username,"Food",0)+buffer_read(_Buffer, buffer_u16))
-        ini_write_real(_Username,"Stone", ini_read_real(_Username,"Stone",0)+buffer_read(_Buffer, buffer_u16))
+		ini_write_real(_Username,"Planks", ini_read_real(_Username,"Planks",0)+buffer_read(_Buffer, buffer_u32))
+		ini_write_real(_Username,"Food", ini_read_real(_Username,"Food",0)+buffer_read(_Buffer, buffer_u32))
+        ini_write_real(_Username,"Stone", ini_read_real(_Username,"Stone",0)+buffer_read(_Buffer, buffer_u32))
         buffer_seek(BufferOut,buffer_seek_start,0)
         buffer_write(BufferOut,buffer_string,"Resources Gained")
         buffer_write(BufferOut,buffer_string,_Username)
-        buffer_write(BufferOut,buffer_u16,ini_read_real(_Username,"Planks",0))
-        buffer_write(BufferOut,buffer_u16,ini_read_real(_Username,"Food",0))
-        buffer_write(BufferOut,buffer_u16,ini_read_real(_Username,"Stone",0))
+        buffer_write(BufferOut,buffer_u32,ini_read_real(_Username,"Planks",0))
+        buffer_write(BufferOut,buffer_u32,ini_read_real(_Username,"Food",0))
+        buffer_write(BufferOut,buffer_u32,ini_read_real(_Username,"Stone",0))
         scr_send_everyone()
 		break;
 		//Send recourses back.
+    case "Buy Building":
+        var _Username = buffer_read(_Buffer, buffer_string)
+        ini_write_real(_Username, "Planks", buffer_read(_Buffer, buffer_u32))
+        ini_write_real(_Username, "Food", buffer_read(_Buffer, buffer_u32))
+        ini_write_real(_Username, "Stone", buffer_read(_Buffer, buffer_u32))
+        ini_write_real(_Username, "Workers", buffer_read(_Buffer, buffer_u32))
+        break;
 	}

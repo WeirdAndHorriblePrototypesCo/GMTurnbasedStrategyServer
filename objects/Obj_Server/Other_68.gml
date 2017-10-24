@@ -27,7 +27,7 @@ switch(_TypeEvent) {
 			buffer_seek(BufferOut, buffer_seek_start, 0);
 			buffer_write(BufferOut, buffer_string, "Player Number");
 			buffer_write(BufferOut, buffer_u32, _Target);
-
+            buffer_write(BufferOut, buffer_string, Version);
 			network_send_packet(_Target, BufferOut, buffer_tell(BufferOut));
 			}
 		else { show_message("Too many players!") }

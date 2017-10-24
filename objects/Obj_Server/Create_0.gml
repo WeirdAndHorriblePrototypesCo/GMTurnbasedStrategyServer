@@ -1,6 +1,7 @@
 /// @description Create Network
 
 Startup = 1
+Version = "Version 1"
 
 //TCP more reliable than UDP (It checks packages) & is made for connections. 
 //UDP broadcasts, making it a little faster. (Can be used for getting IP adresses, looking for servers etc)
@@ -35,3 +36,6 @@ CloudStrength = random(1)
 
 //Open Ini file for use.
 ini_open(working_directory + "UserDetails.txt")
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+Command = ds_list_create()
