@@ -55,7 +55,7 @@ if keyboard_lastkey == 13 {
         _Rounds+=1
         }
     //Check if it is a command.
-    if _String1 == "AllowName" {
+    if _String1 == "AddName" {
         _Rounds = 0
         repeat ds_list_size(TakenUsernames) {
             if ds_list_find_value(TakenUsernames,_Rounds) == _String2 {
