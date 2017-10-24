@@ -1,7 +1,7 @@
 /// @description Create Network
 
 Startup = 1
-Version = "Version 1"
+Version = "Version 2.0"
 
 //TCP more reliable than UDP (It checks packages) & is made for connections. 
 //UDP broadcasts, making it a little faster. (Can be used for getting IP adresses, looking for servers etc)
