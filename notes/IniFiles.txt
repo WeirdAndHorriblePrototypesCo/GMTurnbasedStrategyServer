@@ -1,0 +1,5 @@
+//Save to txt file 
+		//PLEASE READ ME: The file can be found in /LOCAL in your app-data. 
+		//Its under Turn_Based_Strategy_Server in a seperate folder for some reason!!!!!
+        //When you create a new account, you cannot see it in UserDetails yet! It will only 
+        //show once you have closed down the server.

@@ -14,8 +14,8 @@ draw_text(10,130,string("Cloud Strength = ") + string(CloudStrength))
 //The connected player data.
 var _Rounds = 0
 
-repeat ds_list_size(Sockets) {
-	draw_text(700,10+_Rounds*15,string("Player ")+string(_Rounds+1)+string(" = ")+string(ds_list_find_value(Sockets,_Rounds)))
+repeat ds_list_size(TakenUsernames) {
+	draw_text(700,10+_Rounds*15,string("Player ")+string(_Rounds+1)+string(" = ")+ds_list_find_value(TakenUsernames,_Rounds))
 	_Rounds+=1
 	}
 if _Rounds = MaxClients { draw_text_colour(700,10+_Rounds*15+15,"The server is full!!!",c_red,c_red,c_red,c_red,1) }

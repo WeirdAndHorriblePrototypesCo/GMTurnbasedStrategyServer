@@ -55,7 +55,7 @@ if keyboard_lastkey == 13 {
         _Rounds+=1
         }
     //Check if it is a command.
-    if _String1 == "AddName" {
+    if _String1 == "AddName" || _String1 == "AllowUser" || _String1 == "AddUser" {
         _Rounds = 0
         repeat ds_list_size(TakenUsernames) {
             if ds_list_find_value(TakenUsernames,_Rounds) == _String2 {
@@ -110,6 +110,10 @@ if keyboard_lastkey == 13 {
         ini_write_real(_Target,"Workers",_NewAmount)
         scr_send_everyone()
         }
-    
+    //Whoops, this thing breaks all statistics.
+    if _String1 == "TurnDuration" || _String1 == "Timer" {
+        TurnDuration = real(_String2)
+        TurnAmount=((Time-TurnDuration*TurnAmount)-TurnDuration)/3
+        }
     ds_list_clear(Command)
     }
