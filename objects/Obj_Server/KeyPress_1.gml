@@ -113,7 +113,7 @@ if keyboard_lastkey == 13 {
     //Whoops, this thing breaks all statistics.
     if _String1 == "TurnDuration" || _String1 == "Timer" {
         TurnDuration = real(_String2)
-        TurnAmount=((Time-TurnDuration*TurnAmount)-TurnDuration)/3
+        TurnAmount=floor(((Time-TurnDuration*TurnAmount)-TurnDuration)/3)
         }
     ds_list_clear(Command)
     }

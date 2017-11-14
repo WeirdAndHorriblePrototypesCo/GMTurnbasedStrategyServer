@@ -7,7 +7,6 @@ if TurnDuration*TurnAmount-Time+1 < 0 {
 	}
 if Time-TurnDuration*TurnAmount == 1 {
 	TurnAmount+=1
-	
 	//This section is for the TURN. \/\/\/
 	//Set required variables for creating a buffer & create one.
 	var _Size = 1024;
