@@ -54,3 +54,5 @@ if Time-TurnDuration*TurnAmount == 1 {
 		}
 	
 	}
+    
+ini_open(working_directory + "UserDetails.txt")

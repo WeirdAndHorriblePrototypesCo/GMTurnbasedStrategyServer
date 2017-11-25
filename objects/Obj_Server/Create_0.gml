@@ -24,7 +24,7 @@ Sockets = ds_list_create()
 TakenUsernames = ds_list_create()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-//Turn info. / Settings.
+//Turn info. // Settings.
 Time = 0
 TurnDuration = 120
 TurnAmount = 0
@@ -34,8 +34,19 @@ CloudDirection=irandom(360)
 CloudSpeed = irandom(3)+irandom(2)
 CloudStrength = random(1)
 
-//Open Ini file for use.
-ini_open(working_directory + "UserDetails.txt")
-
 ////////////////////////////////////////////////////////////////////////////////////////////////
 Command = ds_list_create()
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+ ///VARIABLES for world generation.
+//Set the grid sizes. If you change it here, you change it everywhere.
+global.GridWidth		= 64; //size of every square
+global.GridHeight		= 64;
+global.GridDepth        = 64;
+global.WorldSeed		= "Fire water burn";
+global.WorldWidth		= 512;
+global.WorldHeight		= 512;
+global.WorldArray		= array_world_create(global.GridWidth,global.GridHeight,global.GridDepth);
+//Setting the world seed
+random_set_seed(global.WorldSeed);
+

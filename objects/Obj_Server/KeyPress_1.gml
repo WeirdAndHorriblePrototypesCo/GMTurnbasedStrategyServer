@@ -74,7 +74,9 @@ if keyboard_lastkey == 13 {
         buffer_write(BufferOut, buffer_string, "Cheat, Give Planks")
 	    buffer_write(BufferOut, buffer_string, _Target);		
 		buffer_write(BufferOut, buffer_u32, _Amount);
+        ini_open(working_directory + "UserDetails.txt")
         ini_write_real(_Target,"Planks",_NewAmount)
+        ini_close()
         scr_send_everyone()
         }
     if _String1 == "AddFood" {
@@ -85,7 +87,9 @@ if keyboard_lastkey == 13 {
         buffer_write(BufferOut, buffer_string, "Cheat, Give Food")
 	    buffer_write(BufferOut, buffer_string, _Target);		
 		buffer_write(BufferOut, buffer_u32, _Amount);
+        ini_open(working_directory + "UserDetails.txt")
         ini_write_real(_Target,"Food",_NewAmount)
+        ini_close()
         scr_send_everyone()
         }
     if _String1 == "AddStone" {
@@ -96,7 +100,9 @@ if keyboard_lastkey == 13 {
         buffer_write(BufferOut, buffer_string, "Cheat, Give Stone")
 	    buffer_write(BufferOut, buffer_string, _Target);		
 		buffer_write(BufferOut, buffer_u32, _Amount);
+        ini_open(working_directory + "UserDetails.txt")
         ini_write_real(_Target,"Stone",_NewAmount)
+        ini_close()
         scr_send_everyone()
         }
     if _String1 == "AddWorkers" {
@@ -107,7 +113,9 @@ if keyboard_lastkey == 13 {
         buffer_write(BufferOut, buffer_string, "Cheat, Give Workers")
 	    buffer_write(BufferOut, buffer_string, _Target);		
 		buffer_write(BufferOut, buffer_u32, _Amount);
+        ini_open(working_directory + "UserDetails.txt")
         ini_write_real(_Target,"Workers",_NewAmount)
+        ini_close()
         scr_send_everyone()
         }
     //Whoops, this thing breaks all statistics.

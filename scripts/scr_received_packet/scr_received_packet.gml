@@ -18,11 +18,6 @@ var _Alignment = 1;
 BufferOut = buffer_create(_Size,_Type,_Alignment)
 
 switch(_MessageId) {
-	case "Click":		//This case puts a dot on the screen.
-		var _Mx = buffer_read(_Buffer, buffer_u32); //120
-		var _My = buffer_read(_Buffer, buffer_u32); //Nothing left in the buffer.
-		instance_create_depth(_Mx, _My, 0, Obj_Click)
-		break;
     case "House":
         buffer_write(BufferOut, buffer_string, "House");
         buffer_write(BufferOut, buffer_u32, buffer_read(_Buffer, buffer_u32));	
@@ -31,15 +26,21 @@ switch(_MessageId) {
         scr_send_everyone()
         break;
 	case "Small Building":		//This case sends the data received to all players.
-        var _Type = buffer_read(_Buffer,buffer_string)
 		buffer_seek(BufferOut, buffer_seek_start, 0);
-        buffer_write(BufferOut,buffer_string,"Small Building")
-		buffer_write(BufferOut, buffer_u32, buffer_read(_Buffer, buffer_u32));	
-		buffer_write(BufferOut, buffer_u32, buffer_read(_Buffer, buffer_u32));
-        buffer_write(BufferOut, buffer_string, buffer_read(_Buffer, buffer_string));
-        if _Type == "Farm" { buffer_write(BufferOut, buffer_string, "Farm") }
-        if _Type == "Mine" { buffer_write(BufferOut, buffer_string, "Mine") }
-		scr_send_everyone()
+        buffer_write(BufferOut,buffer_string,"Small Building") //command | package code
+        var _Type = buffer_read(_Buffer,buffer_string) //type
+        var _LayerNumber = buffer_read(_Buffer, buffer_u32) //Layer number
+        var _XLoc = buffer_read(_Buffer, buffer_u32)
+        var _YLoc = buffer_read(_Buffer, buffer_u32)
+        var _Username = buffer_read(_Buffer, buffer_string)
+		buffer_write(BufferOut, buffer_u32, _XLoc);	//x
+		buffer_write(BufferOut, buffer_u32, _YLoc);  //y
+        buffer_write(BufferOut, buffer_string, _Username); //username
+        buffer_write(BufferOut, buffer_string, _Type);
+        buffer_write(BufferOut, buffer_u32, _LayerNumber)
+        scr_send_everyone()
+        array_world_set(_LayerNumber, global.WorldArray, _XLoc, _YLoc, 3)
+        array_world_set(_Username, global.WorldArray, _XLoc, _YLoc, 4)
 		break;
 	case "Login":
 		var _Username = buffer_read(_Buffer,buffer_string)
@@ -85,6 +86,44 @@ switch(_MessageId) {
 		//Send all info to the player that it needs to have to initialize.
 		script_execute(scr_initialize_new_player,_Buffer);
 		break;
+    case "Terrain Map":
+        //Monster inbound. Send terrain to the client.
+        TerrainBuffer = buffer_create(_Size,buffer_grow,_Alignment)
+        buffer_seek(TerrainBuffer, buffer_seek_start, 0)
+        buffer_write(TerrainBuffer, buffer_string, "Terrain Map")
+        buffer_write(TerrainBuffer, buffer_string, buffer_read(_Buffer, buffer_string))
+        buffer_write(TerrainBuffer, buffer_u32, global.GridWidth)
+        buffer_write(TerrainBuffer, buffer_u32, global.GridHeight)
+        buffer_write(TerrainBuffer, buffer_u32, global.GridDepth)
+        buffer_write(TerrainBuffer, buffer_u32, global.WorldHeight)
+        buffer_write(TerrainBuffer, buffer_u32, global.WorldWidth)
+        var _X = 0
+        var _Y = 0
+        var _Z = 0
+        var _Target = 0
+        repeat global.GridDepth {
+            repeat global.GridHeight {
+                repeat global.GridWidth {
+                    _Target = array_world_get(global.WorldArray,_X,_Y,_Z)
+                    buffer_write(TerrainBuffer, buffer_u32, _Target);
+                    _X+=1
+                    }
+                _Y+=1
+                _X=0
+                }
+            _Z+=1
+            _Y=0
+            _X=0
+            }
+        var _Rounds = 0
+        repeat ds_list_size(Sockets) {
+        	//Network send in a repeat statement to every connected player.
+        	network_send_packet(ds_list_find_value(Sockets,_Rounds), TerrainBuffer, buffer_tell(TerrainBuffer));
+        	_Rounds+=1
+        	}
+        buffer_delete(TerrainBuffer)
+        show_debug_message("Send all tiles to the player logging in!")
+        break;
 	case "Create Account":
 		var _Username = buffer_read(_Buffer,buffer_string)
 		var _Password = buffer_read(_Buffer,buffer_string)
@@ -111,12 +150,14 @@ switch(_MessageId) {
 		ini_write_real(_Username,"Planks", ini_read_real(_Username,"Planks",0)+buffer_read(_Buffer, buffer_u32))
 		ini_write_real(_Username,"Food", ini_read_real(_Username,"Food",0)+buffer_read(_Buffer, buffer_u32))
         ini_write_real(_Username,"Stone", ini_read_real(_Username,"Stone",0)+buffer_read(_Buffer, buffer_u32))
+        ini_write_real(_Username,"Workers", ini_read_real(_Username,"Workers",0)+buffer_read(_Buffer, buffer_u32))
         buffer_seek(BufferOut,buffer_seek_start,0)
         buffer_write(BufferOut,buffer_string,"Resources Gained")
         buffer_write(BufferOut,buffer_string,_Username)
         buffer_write(BufferOut,buffer_u32,ini_read_real(_Username,"Planks",0))
         buffer_write(BufferOut,buffer_u32,ini_read_real(_Username,"Food",0))
         buffer_write(BufferOut,buffer_u32,ini_read_real(_Username,"Stone",0))
+        buffer_write(BufferOut,buffer_u32,ini_read_real(_Username,"Workers",0))
         scr_send_everyone()
 		break;
 		//Send recourses back.
