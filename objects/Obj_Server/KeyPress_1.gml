@@ -10,20 +10,31 @@ if keyboard_lastkey == 8 && _Skip == 0 {
 	ds_list_delete(Command,ds_list_size(Command)-1)
 	exit
 	}
+if keyboard_lastkey == 38 {
+	ds_list_clear(Command)
+	var _Rounds = 0
+	_Skip = 1
+	repeat ds_list_size(PrevCommand) {
+		ds_list_add(Command,ds_list_find_value(PrevCommand,_Rounds))
+		_Rounds+=1
+		}
+	}
 if _Skip == 0 {
     ds_list_add(Command,keyboard_lastchar)
     }
-
+	
 var _Rounds = 0
 var _CommandText = ""
 var _Skip = 0
 if keyboard_lastkey == 13 {
     //Get the string you have typed.
+	ds_list_clear(PrevCommand)
 	repeat ds_list_size(Command) {
+		ds_list_add(PrevCommand,ds_list_find_value(Command,_Rounds))
 		_CommandText+=string(ds_list_find_value(Command,_Rounds))
 		_Rounds+=1
 		}
-    
+	
     _Rounds=0
     var _StringStart = 0
     var _StringEnd = 0
